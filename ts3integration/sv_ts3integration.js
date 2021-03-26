@@ -17,7 +17,12 @@ along with this program in the file "LICENSE".  If not, see <http://www.gnu.org/
 */
 
 const { TeamSpeak, QueryProtocol } = require("ts3-nodejs-library");
-var ts3config = require("./plugins/ts3integration/ts3integration/config_ts3integration.json");
+var ts3config;
+try {
+    ts3config = require("./plugins/ts3integration/config_ts3integration.json");
+} catch {
+    ts3config = require("./plugins/ts3integration/ts3integration/config_ts3integration.json");
+}
 var clientsToAdd = [];
 var clientsToRemove = [];
 
