@@ -4,5 +4,6 @@
     "ts3server_qport": 10011,
     "ts3server_user": "",
     "ts3server_pass": "",
-    "onduty_servergroup": "On Duty"
+    "onduty_servergroup": "On Duty",
+    "enforced_channels": ["test", "example"]
 }

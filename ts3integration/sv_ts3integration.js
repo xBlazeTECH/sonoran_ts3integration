@@ -51,7 +51,7 @@ setInterval(() => {
             protocol: QueryProtocol.RAW,
             username: ts3config.ts3server_user,
             password: ts3config.ts3server_pass,
-            nickname: "test"
+            nickname: "SonoranCAD Integration"
         }).then(async teamspeak => {
             //retrieve the server group
             const sGroup = await teamspeak.getServerGroupByName(ts3config.onduty_servergroup);
@@ -76,6 +76,13 @@ setInterval(() => {
                 if (!client) {
                     emit("SonoranCAD::core:writeLog", "warn", "Was unable to locate client with ID " + id);
                 } else {
+                    // get name of channel client is in
+                    let channel = await teamspeak.getChannelById(client.cid);
+                    if (ts3config.enforced_channels.includes(channel.name)) {
+                        await teamspeak.clientKick(client, 4, "Went off duty", true);
+                    } else {
+                        print("client not in enforced channel");
+                    }
                     await teamspeak.clientDelServerGroup(client, sGroup);
                     emit("SonoranCAD::core:writeLog", "debug", "Removing " + client.nickname + " from onduty group " + ts3config.onduty_servergroup); 
                 }
