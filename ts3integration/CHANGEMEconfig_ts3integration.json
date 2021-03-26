@@ -1,0 +1,8 @@
+{
+    "ts3server_host": "127.0.0.1",
+    "ts3server_port": 9987,
+    "ts3server_qport": 10011,
+    "ts3server_user": "",
+    "ts3server_pass": "",
+    "onduty_servergroup": "On Duty"
+}
