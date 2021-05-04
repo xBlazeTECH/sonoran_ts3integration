@@ -16,36 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program in the file "LICENSE".  If not, see <http://www.gnu.org/licenses/>.
 */
 
+const { on } = require("node:events");
 const { TeamSpeak, QueryProtocol } = require("ts3-nodejs-library");
-var ts3config;
-try {
-    ts3config = require("./plugins/ts3integration/config_ts3integration.json");
-} catch {
-    ts3config = require("./plugins/ts3integration/ts3integration/config_ts3integration.json");
-}
+var ts3config = require("./plugins/ts3integration/config_ts3integration.json");
 var clientsToAdd = [];
 var clientsToRemove = [];
 
-on('SonoranCAD::pushevents:UnitListUpdate', function(unit) {
-    if (unit.data.apiId1) {
-        if (unit.data.apiId1.includes("=")) {
-            if (unit.type == "EVENT_UNIT_LOGIN")
-                clientsToAdd.push(unit.data.apiId1);
-            else if (unit.type == "EVENT_UNIT_LOGOUT")
-                clientsToRemove.push(unit.data.apiId1);
-            return;
+on('SonoranCAD::pushevents:UnitLogin', function(unit) {
+    for(let apiId of unit.data.apiIds) {
+        if (apiId.includes("=")) {
+            clientsToAdd.push(apiId);
         }
     }
-    if (unit.data.apiId2) {
-        if (unit.data.apiId2.includes("=")) {
-            if (unit.type == "EVENT_UNIT_LOGIN")
-                clientsToAdd.push(unit.data.apiId2);
-            else if (unit.type == "EVENT_UNIT_LOGOUT")
-                clientsToRemove.push(unit.data.apiId2);
-            return;
+});
+
+on('SonoranCAD::pushevents:UnitLogout', function(unit) {
+    for(let apiId of unit.data.apiIds) {
+        if (apiId.includes("=")) {
+            clientsToRemove.push(apiId);
         }
     }
-})
+});
 
 setInterval(() => {
     if (clientsToAdd.length > 0 || clientsToRemove.length > 0) {
