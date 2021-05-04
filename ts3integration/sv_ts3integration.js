@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program in the file "LICENSE".  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { on } = require("node:events");
 const { TeamSpeak, QueryProtocol } = require("ts3-nodejs-library");
 var ts3config = require("./plugins/ts3integration/config_ts3integration.json");
 var clientsToAdd = [];
@@ -30,11 +29,17 @@ on('SonoranCAD::pushevents:UnitLogin', function(unit) {
     }
 });
 
-on('SonoranCAD::pushevents:UnitLogout', function(unit) {
-    for(let apiId of unit.data.apiIds) {
-        if (apiId.includes("=")) {
-            clientsToRemove.push(apiId);
+on('SonoranCAD::pushevents:UnitLogout', function(id) {
+    let uid = exports.sonorancad.GetUnitById(id)-1;
+    let unit = exports.sonorancad.GetUnitCache()[uid];
+    if (unit != undefined) {
+        for(let apiId of unit.data.apiIds) {
+            if (apiId.includes("=")) {
+                clientsToRemove.push(apiId);
+            }
         }
+    } else {
+        emit("SonoranCAD::core:writeLog", "debug", `TS3 Integration Error: Could not find matching unit: ${id} not found, index should be ${uid}`);
     }
 });
 
