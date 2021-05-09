@@ -32,6 +32,9 @@ on('SonoranCAD::pushevents:UnitLogin', function(unit) {
 on('SonoranCAD::pushevents:UnitLogout', function(id) {
     let uid = exports.sonorancad.GetUnitById(id)-1;
     let unit = exports.sonorancad.GetUnitCache()[uid];
+    if (isNaN(uid)) {
+        return;
+    }
     if (unit != undefined) {
         for(let apiId of unit.data.apiIds) {
             if (apiId.includes("=")) {
