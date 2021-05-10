@@ -25,7 +25,12 @@ on('SonoranCAD::pushevents:UnitLogin', function(unit) {
     for(let apiId of unit.data.apiIds) {
         if (apiId.includes("=")) {
             clientsToAdd.push(apiId);
+            let i = clientsToRemove.indexOf(apiId);
+            if (i > -1) {
+                clientsToRemove.splice(i, 1);
+            }
         }
+        
     }
 });
 
@@ -100,5 +105,5 @@ setInterval(() => {
             clientsToRemove = [];
         })
     }
-}, 5000)
+}, ts3config.logoutGraceTime)
 
