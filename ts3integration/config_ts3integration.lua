@@ -8,6 +8,7 @@
 
 local config = {
     enabled = true,
+    ignoreLoader = true
 }
 
 Config.RegisterPluginConfig("ts3integration", config)

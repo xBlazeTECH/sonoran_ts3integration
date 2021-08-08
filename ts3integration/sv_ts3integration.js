@@ -21,10 +21,14 @@ var ts3config = require("./plugins/ts3integration/config_ts3integration.json");
 var clientsToAdd = [];
 var clientsToRemove = [];
 
+// cache units - they might get removed before we process them
+var UnitCache = new Map();
+
 on('SonoranCAD::pushevents:UnitLogin', function(unit) {
     for(let apiId of unit.data.apiIds) {
         if (apiId.includes("=")) {
             clientsToAdd.push(apiId);
+            UnitCache.set(unit.id, apiId);
             let i = clientsToRemove.indexOf(apiId);
             if (i > -1) {
                 clientsToRemove.splice(i, 1);
@@ -35,19 +39,12 @@ on('SonoranCAD::pushevents:UnitLogin', function(unit) {
 });
 
 on('SonoranCAD::pushevents:UnitLogout', function(id) {
-    let uid = exports.sonorancad.GetUnitById(id)-1;
-    let unit = exports.sonorancad.GetUnitCache()[uid];
-    if (isNaN(uid)) {
-        return;
-    }
-    if (unit != undefined) {
-        for(let apiId of unit.data.apiIds) {
-            if (apiId.includes("=")) {
-                clientsToRemove.push(apiId);
-            }
-        }
+    let apiid = UnitCache.get(id);
+    if (apiid != undefined) {
+        clientsToRemove.push(apiid);
+        UnitCache.delete(id);
     } else {
-        emit("SonoranCAD::core:writeLog", "debug", `TS3 Integration Error: Could not find matching unit: ${id} not found, index should be ${uid}`);
+        emit("SonoranCAD::core:writeLog", "debug", `TS3 Integration Error: Could not find matching unit: ${id} not found`);
     }
 });
 
