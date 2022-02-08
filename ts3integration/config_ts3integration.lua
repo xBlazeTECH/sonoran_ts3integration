@@ -7,7 +7,7 @@
 ]]
 
 local config = {
-    enabled = true,
+    enabled = false,
     ignoreLoader = true
 }
 

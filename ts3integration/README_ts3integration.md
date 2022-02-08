@@ -1,3 +1,8 @@
-# sonoran_pushevents
+# ts3integrat
+The TeamSpeak 3 integration plugin requires that users must be logged into the CAD police, fire, EMS, or Dispatch page in order to access specific voice channels.
 
-Handles events pushed to the server from the CAD. This is a unique plugin that uses a js library and does not have any configuration.
+### IMPORTANT: You do not need this plugin to use Sonoran Radio.
+
+## Installation
+
+[Click to view the installation guide.](https://info.sonorancad.com/integration-plugins/integration-plugins/available-plugins/teamspeak-3)

@@ -84,10 +84,11 @@ setInterval(() => {
                 } else {
                     // get name of channel client is in
                     let channel = await teamspeak.getChannelById(client.cid);
+                    emit("SonoranCAD::core:writeLog", "debug", `Client is in channel ID ${client.cid}, which is named ${channel.name}`);
                     if (ts3config.enforced_channels.includes(channel.name)) {
                         await teamspeak.clientKick(client, 4, "Went off duty", true);
                     } else {
-                        print("client not in enforced channel");
+                        emit("SonoranCAD::core:writeLog", "debug", `Channel ${channel.name} is not in enforced list, which is: ${JSON.stringify(ts3config.enforced_channels)}`);
                     }
                     await teamspeak.clientDelServerGroup(client, sGroup);
                     emit("SonoranCAD::core:writeLog", "debug", "Removing " + client.nickname + " from onduty group " + ts3config.onduty_servergroup); 
