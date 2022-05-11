@@ -11,4 +11,6 @@ local config = {
     ignoreLoader = true
 }
 
-Config.RegisterPluginConfig("ts3integration", config)
+if config.enabled then
+    Config.RegisterPluginConfig(config.pluginName, config)
+end
